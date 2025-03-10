@@ -1,6 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { OrbitControls, ThreeMFLoader } from 'three/examples/jsm/Addons.js';
 
 
 const scene = new THREE.Scene();
@@ -32,6 +32,8 @@ scene.add(lightHelper, gridHelper)
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
+// Stars
+
 function addStar() {
   const geometry = new THREE.SphereGeometry(0.25, 24, 24);
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff })
@@ -44,6 +46,56 @@ function addStar() {
 }
 
 Array(200).fill().forEach(addStar)
+
+const spaceTexture = new THREE.TextureLoader().load('space.jpg');
+scene.background = spaceTexture;
+
+// Avatar
+
+const picoTexture = new THREE.TextureLoader().load('Pico.jpg');
+const pico = new THREE.Mesh(
+  new THREE.BoxGeometry(3, 3, 3),
+  new THREE.MeshBasicMaterial({ map: picoTexture })
+);
+
+scene.add(pico);
+
+// Moon
+
+const moonTexture = new THREE.TextureLoader().load('moon.jpg');
+const normalTexture = new THREE.TextureLoader().load('normal.jpg');
+
+const moon = new THREE.Mesh(
+  new THREE.SphereGeometry(3, 32, 32),
+  new THREE.MeshStandardMaterial({
+    map: moonTexture,
+    normalMap: normalTexture
+  })
+);
+
+scene.add(moon);
+
+moon.position.z = 30;
+moon.position.setX(-10);
+
+// Camera and animation
+
+function moveCamera() {
+  const t = document.body.getBoundingClientRect().top;
+  moon.rotation.x += 0.05;
+  moon.rotation.y += 0.075;
+  moon.rotation.z += 0.05;
+
+  pico.rotation.y += 0.01;
+  pico.rotation.z += 0.01;
+
+  camera.position.z = t * -0.01;
+  camera.position.z = t * -0.0002;
+  camera.position.z = t * -0.0002;
+}
+
+document.body.onscroll = moveCamera
+
 
 function animate() {
   requestAnimationFrame(animate);
