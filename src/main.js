@@ -20,15 +20,20 @@ const material = new THREE.MeshStandardMaterial({ color: 0xFF6347 });
 const torus = new THREE.Mesh(geometry, material);
 
 scene.add(torus)
+torus.position.z = -10;
+torus.position.x = 30;
+
+
 const pointLight = new THREE.PointLight(0xffffff)
 pointLight.position.set(5, 5, 5)
 
 const ambientLight = new THREE.AmbientLight(0xffffff)
 scene.add(pointLight, ambientLight)
 
-const lightHelper = new THREE.PointLightHelper(pointLight)
-const gridHelper = new THREE.GridHelper(200, 5);
-scene.add(lightHelper, gridHelper)
+// Helpers
+// const lightHelper = new THREE.PointLightHelper(pointLight)
+// const gridHelper = new THREE.GridHelper(200, 5);
+// scene.add(lightHelper, gridHelper)
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -59,6 +64,8 @@ const pico = new THREE.Mesh(
 );
 
 scene.add(pico);
+pico.position.z = -10;
+pico.position.x = -20
 
 // Moon
 
@@ -75,23 +82,23 @@ const moon = new THREE.Mesh(
 
 scene.add(moon);
 
-moon.position.z = 30;
-moon.position.setX(-10);
+moon.position.z = 10;
+moon.position.setX(-20);
 
 // Camera and animation
 
 function moveCamera() {
-  const t = document.body.getBoundingClientRect().top;
-  moon.rotation.x += 0.05;
+  const t = -10 + document.body.getBoundingClientRect().top;
+  console.log(`bounding client = ${t}`)
+  moon.rotation.x += 0.005;
   moon.rotation.y += 0.075;
-  moon.rotation.z += 0.05;
 
   pico.rotation.y += 0.01;
   pico.rotation.z += 0.01;
 
   camera.position.z = t * -0.01;
-  camera.position.z = t * -0.0002;
-  camera.position.z = t * -0.0002;
+  camera.position.x = t * -0.0002;
+  camera.position.y = t * -0.0002;
 }
 
 document.body.onscroll = moveCamera
